@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="playground"/>
-    <Letter name="a"/>
+    <Letter name="a" :y=y />
   </div>
 </template>
 
@@ -13,6 +13,22 @@ export default Vue.extend({
   name: 'PlayGround',
   components: {
     Letter
+  },
+  data () {
+    return {
+      y: -900
+    }
+  },
+  mounted () {
+    this.startGameLoop()
+  },
+  methods: {
+    startGameLoop () {
+      setInterval(this.moveLetter, 5)
+    },
+    moveLetter () {
+      this.y += 0.5
+    }
   }
 })
 </script>
