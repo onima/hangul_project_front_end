@@ -2,9 +2,11 @@
   <div>
     <div class="playground"/>
     <div v-for="onScreenLetter in onScreenLetters" :key="onScreenLetter.id">
-      <Letter :name="onScreenLetter.name" :x="onScreenLetter.x" :y="onScreenLetter.y" />
+      <transition name="fade" v-on:after-leave="deleteLetter(onScreenLetter)">
+        <Letter v-if="onScreenLetter.show" :name="onScreenLetter.name" :x="onScreenLetter.x" :y="onScreenLetter.y" />
+      </transition>
     </div>
-    <h1>{{ guess }}</h1>
+    <h1 class="guess">{{ guess }}</h1>
   </div>
 </template>
 
@@ -42,6 +44,9 @@ export default Vue.extend({
         this.guess += event.key
       } else if (isBackspaceInput) {
         this.guess = this.guess.slice(0, -1)
+      } else if (isEnterInput) {
+        this.verifyGuess()
+        this.guess = ''
       }
     },
     startGameLoop () {
@@ -57,9 +62,20 @@ export default Vue.extend({
       const randomLetterName = _.sample(this.letters)
       const randomWitdh = _.sample(this.widths)
       const newId = this.id
-      const newLetter = { id: newId, name: randomLetterName, x: randomWitdh, y: this.y }
+      const newLetter = { id: newId, name: randomLetterName, x: randomWitdh, y: this.y, show: true }
       this.id += 1
       this.onScreenLetters.push(newLetter)
+    },
+    verifyGuess () {
+      const matchingLetter = _.find(this.onScreenLetters, ['name', this.guess])
+      if (matchingLetter) {
+        matchingLetter.show = false
+      }
+    },
+    deleteLetter (letter: object) {
+      _.remove(this.onScreenLetters, function (l) {
+        return l.id === letter.id
+      })
     }
   }
 })
@@ -74,5 +90,17 @@ export default Vue.extend({
     display: inline-block;
     background-repeat: no-repeat;
     background-image: url("../assets/south_korea_flag.png");
+  }
+
+  .guess {
+    font-size: 40px;
+    color: red
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    opacity: 0;
   }
 </style>
