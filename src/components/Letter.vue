@@ -1,5 +1,5 @@
 <template>
-  <img class="letter" alt="Letter" :src="imageSrc" :style="{ top: letterPosition}"/>
+  <img class="letter" alt="Letter" :src="imageSrc" :style="{ left: xPosition, top: yPosition }"/>
 </template>
 
 <script lang="ts">
@@ -9,6 +9,7 @@ export default Vue.extend({
   name: 'Letter',
   props: {
     name: String,
+    x: Number,
     y: Number
   },
   computed: {
@@ -16,7 +17,10 @@ export default Vue.extend({
       const images = require.context('../assets/', false, /\.png$/)
       return images('./' + this.name + '.png')
     },
-    letterPosition () {
+    xPosition () {
+      return `${this.x}px`
+    },
+    yPosition () {
       return `${this.y}px`
     }
   }
@@ -26,8 +30,7 @@ export default Vue.extend({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
   .letter {
-    position: relative;
+    position: fixed;
     z-index: 1;
-    right: 700px;
   }
 </style>
