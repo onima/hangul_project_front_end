@@ -4,6 +4,7 @@
     <div v-for="onScreenLetter in onScreenLetters" :key="onScreenLetter.id">
       <Letter :name="onScreenLetter.name" :x="onScreenLetter.x" :y="onScreenLetter.y" />
     </div>
+    <h1>{{ guess }}</h1>
   </div>
 </template>
 
@@ -23,13 +24,26 @@ export default Vue.extend({
       y: -200,
       letters: ['a', 'eo', 'eu', 'i', 'o', 'u'],
       widths: [500, 600, 700, 800, 900, 1000, 1100, 1200],
-      onScreenLetters: [] as object[]
+      onScreenLetters: [] as object[],
+      guess: ''
     }
   },
   mounted () {
     this.startGameLoop()
+    document.addEventListener('keydown', (e) => { this.onKeyDown(e) })
   },
   methods: {
+    onKeyDown (event) {
+      const isAlphabetInput = _.includes(_.split('abcdefghijklmnopqrstuvwxyz', ''), event.key)
+      const isEnterInput = event.key === 'Enter'
+      const isBackspaceInput = event.key === 'Backspace'
+
+      if (isAlphabetInput) {
+        this.guess += event.key
+      } else if (isBackspaceInput) {
+        this.guess = this.guess.slice(0, -1)
+      }
+    },
     startGameLoop () {
       setInterval(this.moveLetters, 5)
       setInterval(this.addNewLetter, 5000)
