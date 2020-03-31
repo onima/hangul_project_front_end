@@ -1,12 +1,15 @@
 <template>
   <div>
     <div class="playground"/>
-    <Letter name="a" :y=y />
+    <div v-for="onScreenLetter in onScreenLetters" :key="onScreenLetter.id">
+      <Letter :name="onScreenLetter.name" :x="onScreenLetter.x" :y="onScreenLetter.y" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import _ from 'lodash'
 import Letter from '@/components/Letter.vue'
 
 export default Vue.extend({
@@ -16,7 +19,11 @@ export default Vue.extend({
   },
   data () {
     return {
-      y: -900
+      id: 1,
+      y: -200,
+      letters: ['a', 'eo', 'eu', 'i', 'o', 'u'],
+      widths: [500, 600, 700, 800, 900, 1000, 1100, 1200],
+      onScreenLetters: [] as object[]
     }
   },
   mounted () {
@@ -24,10 +31,21 @@ export default Vue.extend({
   },
   methods: {
     startGameLoop () {
-      setInterval(this.moveLetter, 5)
+      setInterval(this.moveLetters, 5)
+      setInterval(this.addNewLetter, 5000)
     },
-    moveLetter () {
-      this.y += 0.5
+    moveLetters () {
+      this.onScreenLetters.forEach(function (l) {
+        l.y += 0.5
+      })
+    },
+    addNewLetter () {
+      const randomLetterName = _.sample(this.letters)
+      const randomWitdh = _.sample(this.widths)
+      const newId = this.id
+      const newLetter = { id: newId, name: randomLetterName, x: randomWitdh, y: this.y }
+      this.id += 1
+      this.onScreenLetters.push(newLetter)
     }
   }
 })
