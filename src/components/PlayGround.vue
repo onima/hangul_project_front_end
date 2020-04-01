@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Score :state-score="stateScore" />
     <div class="playground"/>
     <div v-for="onScreenLetter in onScreenLetters" :key="onScreenLetter.id">
       <transition name="fade" v-on:after-leave="deleteLetter(onScreenLetter)">
@@ -14,11 +15,13 @@
 import Vue from 'vue'
 import _ from 'lodash'
 import Letter from '@/components/Letter.vue'
+import Score from '@/components/Score.vue'
 
 export default Vue.extend({
   name: 'PlayGround',
   components: {
-    Letter
+    Letter,
+    Score
   },
   data () {
     return {
@@ -27,7 +30,8 @@ export default Vue.extend({
       letters: ['a', 'eo', 'eu', 'i', 'o', 'u'],
       widths: [500, 600, 700, 800, 900, 1000, 1100, 1200],
       onScreenLetters: [] as object[],
-      guess: ''
+      guess: '',
+      stateScore: 0
     }
   },
   mounted () {
@@ -70,6 +74,7 @@ export default Vue.extend({
       const matchingLetter = _.find(this.onScreenLetters, ['name', this.guess])
       if (matchingLetter) {
         matchingLetter.show = false
+        this.stateScore += 1
       }
     },
     deleteLetter (letter: object) {
