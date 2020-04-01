@@ -1,5 +1,5 @@
 <template>
-  <img class="letter" alt="Letter" :src="imageSrc" :style="{ left: xPosition, top: yPosition }"/>
+  <img :class="[isTargeted ? targeted: noTargeted]" alt="Letter" :src="imageSrc" :style="{ left: xPosition, top: yPosition }"/>
 </template>
 
 <script lang="ts">
@@ -10,7 +10,16 @@ export default Vue.extend({
   props: {
     name: String,
     x: Number,
-    y: Number
+    y: Number,
+    guess: String,
+    matchingTarget: Boolean
+  },
+  data () {
+    return {
+      targeted: 'targeted',
+      noTargeted: 'no-targeted',
+      letterName: this.name
+    }
   },
   computed: {
     imageSrc () {
@@ -22,6 +31,9 @@ export default Vue.extend({
     },
     yPosition () {
       return `${this.y}px`
+    },
+    isTargeted () {
+      return (this.guess === this.letterName) && this.matchingTarget
     }
   }
 })
@@ -29,8 +41,17 @@ export default Vue.extend({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-  .letter {
+  .no-targeted {
     position: fixed;
     z-index: 1;
   }
+
+  .targeted {
+    position: fixed;
+    z-index: 1;
+    background-color: red;
+    opacity: 0.5;
+    border-radius: 50%;
+  }
+
 </style>
