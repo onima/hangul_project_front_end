@@ -24,6 +24,7 @@ export default Vue.extend({
     display: inline-block;
     position: absolute;
     margin-top: 60px;
+    margin-left: -260px;
     font-size: 30px;
   }
 
