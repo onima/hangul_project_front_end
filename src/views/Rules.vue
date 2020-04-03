@@ -2,8 +2,11 @@
   <div>
     <div class="homepage"/>
     <div class="rules">
-      <p>Guess each korean alphabet letter displayed on screen by typing the equivalent romanization letter and press enter : </p>
-      <p>If guess is correct, you score 1 point and letter disappears. If letter reach water before you guessed it, you loose</p>
+      <h2>Learn korean pronunciation while having fun !!</h2>
+      <p>* Guess each korean alphabet letter displayed on screen by typing the equivalent romanization letter and press enter </p>
+      <p>* If guess is correct : 1 point and the letter disappears.
+      <p>* If guess is incorrect : game continue.
+      <p>* If letter disappears in sky : you loose</p>
     </div>
   </div>
 </template>
@@ -29,17 +32,21 @@ export default Vue.extend({
 
   .homepage {
     width: 1200px;
-    height: 800px;
+    height: 1000px;
     margin-top: -50px;
-    opacity: 0.3;
     display: inline-block;
     background-repeat: no-repeat;
-    background-image: url("../assets/south_korea_flag.png");
+    background-image: url("../assets/sky.png");
   }
 
   .rules {
     position: absolute;
-    margin-left: 550px;
-    margin-top: -400px;
+    width: 1000px;
+    margin-left: 450px;
+    margin-top: -900px;
+    color: FloralWhite;
+    font-size: 20px;
+    text-shadow: 2px 2px 4px #808080;
+    font-family: monospace;
   }
 </style>

@@ -5,11 +5,8 @@
     <div class="playground"/>
     <GameOver v-if="!isRunning"/>
       <div v-for="onScreenLetter in onScreenLetters" :key="onScreenLetter.id">
-        <transition name="fade" v-on:after-leave="deleteLetter(onScreenLetter)">
-          <Letter v-if="onScreenLetter.show" :name="onScreenLetter.name" :x="onScreenLetter.x" :y="onScreenLetter.y" :guess="guess" :matching-target="isTargeted(onScreenLetter)" />
-        </transition>
+        <Letter v-if="onScreenLetter.show" :id="onScreenLetter.id" :name="onScreenLetter.name" :guess="guess" :romanization="onScreenLetter.romanization" :is-found="onScreenLetter.found" :matching-target="isTargeted(onScreenLetter)" @letter-overtake-player="letterOvertakePlayer" @delete-letter="deleteLetter" :stopMovement="stopMovement"/>
       </div>
-    <div class="sea" />
   </div>
 </template>
 
@@ -31,14 +28,12 @@ export default Vue.extend({
     return {
       isRunning: false,
       id: 1,
-      y: -200,
-      letters: ['a', 'eo', 'eu', 'i', 'o', 'u'],
-      widths: [500, 600, 700, 800, 900, 1000, 1100, 1200],
+      letters: { a: '아', eo: '어', eu: '으', i: '이', o: '오', u: '우' },
       onScreenLetters: [] as object[],
       guess: '',
       stateScore: 0,
       intervalOne: null,
-      intervalTwo: null
+      stopMovement: false
     }
   },
   watch: {
@@ -73,48 +68,41 @@ export default Vue.extend({
       }
     },
     startGameLoop () {
-      this.intervalOne = setInterval(this.moveLetters, 5)
-      this.intervalTwo = setInterval(this.addNewLetter, 5000)
+      this.intervalOne = setInterval(this.addNewLetter, 5000)
     },
     stopGameLoop () {
       clearInterval(this.intervalOne)
-      clearInterval(this.intervalTwo)
     },
     restartGame () {
       this.intervalOne = null
-      this.intervalTwo = null
       this.stateScore = 0
       this.onScreenLetters = []
+      this.guess = ''
+      this.stopMovement = false
       this.isRunning = true
     },
-    moveLetters () {
-      this.onScreenLetters.forEach(function (l) {
-        l.y += 0.5
-      })
-
-      const letterOvertakingPlayer = this.onScreenLetters.some(this.isLetterOvertakingPlayer)
-      if (letterOvertakingPlayer) {
-        this.isRunning = false
-      }
-    },
     addNewLetter () {
-      const randomLetterName = _.sample(this.letters)
-      const randomWitdh = _.sample(this.widths)
+      const randomLetterNameRom = _.sample(_.keys(this.letters))
+      const randomLetterNameHang = this.letters[randomLetterNameRom]
       const newId = this.id
-      const newLetter = { id: newId, name: randomLetterName, x: randomWitdh, y: this.y, show: true }
+      const newLetter = { id: newId, name: randomLetterNameHang, romanization: randomLetterNameRom, show: true, found: false }
       this.id += 1
       this.onScreenLetters.push(newLetter)
     },
     verifyGuess () {
-      const matchingLetter = _.find(this.onScreenLetters, ['name', this.guess])
+      const matchingLetter = _.find(this.onScreenLetters, ['romanization', this.guess])
       if (matchingLetter) {
-        matchingLetter.show = false
+        matchingLetter.found = true
         this.stateScore += 1
       }
     },
-    deleteLetter (letter: object) {
+    deleteLetter (letterId: object) {
+      const matchingLetter = _.find(this.onScreenLetters, ['id', letterId])
+      if (matchingLetter) {
+        matchingLetter.show = false
+      }
       _.remove(this.onScreenLetters, function (l) {
-        return l.id === letter.id
+        return l.id === letterId
       })
     },
     isTargeted (letter: object) {
@@ -126,8 +114,9 @@ export default Vue.extend({
         return false
       }
     },
-    isLetterOvertakingPlayer (letter: object) {
-      return letter.y > 820
+    letterOvertakePlayer () {
+      this.isRunning = false
+      this.stopMovement = true
     }
   }
 })
@@ -137,41 +126,27 @@ export default Vue.extend({
 <style scoped lang="scss">
   .playground {
     width: 1200px;
-    height: 800px;
+    height: 1000px;
     margin-top: -50px;
-    opacity: 0.3;
     display: inline-block;
     background-repeat: no-repeat;
-    background-image: url("../assets/south_korea_flag.png");
-  }
-
-  .sea {
-    width: 1200px;
-    height: 200px;
-    position: relative;
-    z-index: 3;
-    display: inline-block;
-    background-repeat: no-repeat;
-    margin-top: -50px;
-    background-image: url("../assets/sea.png");
-    border-radius: 150px 150px 80px 80px;
-    margin-left: 65px;
+    background-image: url("../assets/sky.png");
   }
 
   .guess {
     position: absolute;
+    color: FloralWhite;
+    text-shadow: 2px 2px 4px #808080;
+    font-family: monospace;
     font-size: 30px;
-    margin-top: 120px;
-    margin-left: 55px;
-  }
-
-  .input {
-    color: red
+    margin-top: 60px;
+    margin-left: 340px;
   }
 
   .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s;
+    transition: opacity 0.5s;
   }
+
   .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
   }
