@@ -25,7 +25,12 @@ export default Vue.extend({
 <style scoped lang="scss">
   .gameover {
     position: absolute;
-    margin-left: 800px;
-    margin-top: -400px;
+    margin-left: 690px;
+    margin-top:-600px;
+    color: FloralWhite;
+    font-size: 20px;
+    z-index: 5;
+    text-shadow: 2px 2px 4px #808080;
+    font-family: monospace;
   }
 </style>

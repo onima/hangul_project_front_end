@@ -1,5 +1,5 @@
 <template>
-  <div class="score"> Score : <span class="counter">{{ score }} </span></div>
+  <div class="score"> Score : <span>{{ score }} </span></div>
 </template>
 
 <script lang="ts">
@@ -22,13 +22,11 @@ export default Vue.extend({
 <style scoped lang="scss">
   .score {
     display: inline-block;
+    color: FloralWhite;
+    text-shadow: 2px 2px 4px #808080;
+    font-family: monospace;
     position: absolute;
-    margin-top: 60px;
-    margin-left: -260px;
+    margin-left: 20px;
     font-size: 30px;
-  }
-
-  .counter {
-    color: red;
   }
 </style>

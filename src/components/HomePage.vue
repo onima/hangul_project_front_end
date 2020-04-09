@@ -2,8 +2,7 @@
   <div>
     <div class="homepage"/>
     <div class="title">
-      <h1>Hangul Attack</h1>
-      <p>Learn korean pronunciation while having fun !!</p>
+      <h1>Hangul Sky</h1>
     </div>
   </div>
 </template>
@@ -29,16 +28,18 @@ export default Vue.extend({
 
   .homepage {
     width: 1200px;
-    height: 800px;
+    height: 1000px;
     margin-top: -50px;
-    opacity: 0.3;
     display: inline-block;
     background-repeat: no-repeat;
-    background-image: url("../assets/south_korea_flag.png");
+    background-image: url("../assets/sky.png");
   }
 
   .title {
-    margin-top: -450px;
-    margin-left: 80px;
+    margin-top: -600px;
+    font-size: 30px;
+    color: FloralWhite;
+    text-shadow: 2px 2px 4px #808080;
+    font-family: monospace;
   }
 </style>
