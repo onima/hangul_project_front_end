@@ -28,7 +28,7 @@ export default Vue.extend({
     return {
       isRunning: false,
       id: 1,
-      letters: { a: '아', eo: '어', eu: '으', i: '이', o: '오', u: '우' },
+      letters: { a: '아', eo: '어', eu: '으', i: '이', o: '오', u: '우', ya: '야', yeo: '여', yo: '요', yu: '유' },
       onScreenLetters: [] as object[],
       guess: '',
       stateScore: 0,
