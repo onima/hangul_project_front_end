@@ -25,14 +25,15 @@ export default Vue.extend({
   data () {
     return {
       show: true,
-      x: _.sample([500, 600, 700, 800, 900, 1000, 1100, 1200]),
+      x: _.sample([500, 600, 700, 800, 900, 1000, 1100, 1200]) as number,
       y: -200,
-      interval: null
+      interval: 0
     }
   },
   watch: {
-    isFound () {
+    isFound (): void {
       const anim = document.getElementById('letter')
+      if (anim === null) { return }
 
       anim.addEventListener('animationend', function () {
         this.$emit('delete-letter', this.id)
@@ -43,24 +44,24 @@ export default Vue.extend({
     this.interval = setInterval(this.moveLetter, 5)
   },
   computed: {
-    xLetterPosition () {
+    xLetterPosition (): string {
       return `${this.x}px`
     },
-    yLetterPosition () {
+    yLetterPosition (): string {
       return `${this.y}px`
     },
-    xExplosionPosition () {
+    xExplosionPosition (): string {
       return `${this.x + 5}px`
     },
-    yExplosionPosition () {
+    yExplosionPosition (): string {
       return `${this.y + 10}px`
     },
-    isTargeted () {
+    isTargeted (): boolean {
       return (this.guess === this.romanization) && this.matchingTarget
     }
   },
   methods: {
-    moveLetter () {
+    moveLetter (): void {
       this.y += 0.5
 
       if (this.y > 680) { this.show = false }

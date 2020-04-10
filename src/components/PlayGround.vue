@@ -16,6 +16,7 @@ import _ from 'lodash'
 import Letter from '@/components/Letter.vue'
 import Score from '@/components/Score.vue'
 import GameOver from '@/components/GameOver.vue'
+import { Let } from '@/types/letter.ts'
 
 export default Vue.extend({
   name: 'PlayGround',
@@ -32,18 +33,12 @@ export default Vue.extend({
       onScreenLetters: [] as object[],
       guess: '',
       stateScore: 0,
-      intervalOne: null,
+      intervalOne: 0,
       stopMovement: false
     }
   },
   watch: {
-    isRunning (value) {
-      if (value) {
-        this.startGameLoop()
-      } else {
-        this.stopGameLoop()
-      }
-    }
+    isRunning (v) { v ? this.startGameLoop() : this.stopGameLoop() }
   },
   mounted () {
     window.addEventListener('scroll', () => { window.scrollTo(0, 0) })
@@ -51,7 +46,7 @@ export default Vue.extend({
     document.addEventListener('keydown', (e) => { this.onKeyDown(e) })
   },
   methods: {
-    onKeyDown (event) {
+    onKeyDown (event: KeyboardEvent) {
       const isAlphabetInput = _.includes(_.split('abcdefghijklmnopqrstuvwxyz', ''), event.key)
       const isEnterInput = event.key === 'Enter'
       const isBackspaceInput = event.key === 'Backspace'
@@ -74,7 +69,7 @@ export default Vue.extend({
       clearInterval(this.intervalOne)
     },
     restartGame () {
-      this.intervalOne = null
+      this.intervalOne = 0
       this.stateScore = 0
       this.onScreenLetters = []
       this.guess = ''
@@ -82,22 +77,22 @@ export default Vue.extend({
       this.isRunning = true
     },
     addNewLetter () {
-      const randomLetterNameRom = _.sample(_.keys(this.letters))
-      const randomLetterNameHang = this.letters[randomLetterNameRom]
+      const randomLetterNameRom = _.sample(_.keys(this.letters)) as string
+      const randomLetterNameHang = _.get(this.letters, randomLetterNameRom, '아')
       const newId = this.id
-      const newLetter = { id: newId, name: randomLetterNameHang, romanization: randomLetterNameRom, show: true, found: false }
+      const newLetter = new Let(newId, randomLetterNameHang, randomLetterNameRom)
       this.id += 1
       this.onScreenLetters.push(newLetter)
     },
     verifyGuess () {
-      const matchingLetter = _.find(this.onScreenLetters, ['romanization', this.guess])
+      const matchingLetter = _.find(this.onScreenLetters, ['romanization', this.guess]) as Let
       if (matchingLetter) {
         matchingLetter.found = true
         this.stateScore += 1
       }
     },
     deleteLetter (letterId: object) {
-      const matchingLetter = _.find(this.onScreenLetters, ['id', letterId])
+      const matchingLetter = _.find(this.onScreenLetters, ['id', letterId]) as Let
       if (matchingLetter) {
         matchingLetter.show = false
       }
@@ -105,9 +100,9 @@ export default Vue.extend({
         return l.id === letterId
       })
     },
-    isTargeted (letter: object) {
+    isTargeted (letter: Let) {
       const matchingLetters = _.filter(this.onScreenLetters, ['name', letter.name])
-      const firstLetter = _.head(matchingLetters)
+      const firstLetter = _.head(matchingLetters) as Let
       if (firstLetter) {
         return firstLetter.id === letter.id
       } else {
