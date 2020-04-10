@@ -9,15 +9,7 @@
 import Vue from 'vue'
 
 export default Vue.extend({
-  name: 'GameOver',
-  props: {
-  },
-  data () {
-    return {
-    }
-  },
-  computed: {
-  }
+  name: 'GameOver'
 })
 </script>
 

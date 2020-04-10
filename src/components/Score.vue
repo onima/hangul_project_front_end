@@ -1,5 +1,5 @@
 <template>
-  <div class="score"> Score : <span>{{ score }} </span></div>
+  <div class="score"> Score : <span>{{ stateScore }} </span></div>
 </template>
 
 <script lang="ts">
@@ -9,11 +9,6 @@ export default Vue.extend({
   name: 'Score',
   props: {
     stateScore: Number
-  },
-  computed: {
-    score: function () {
-      return this.stateScore
-    }
   }
 })
 </script>

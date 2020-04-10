@@ -1,9 +1,7 @@
 <template>
   <div>
     <div class="homepage"/>
-    <div class="title">
-      <h1>Hangul Sky</h1>
-    </div>
+    <div class="title"><h1>Hangul Sky</h1></div>
   </div>
 </template>
 
@@ -11,21 +9,12 @@
 import Vue from 'vue'
 
 export default Vue.extend({
-  name: 'Homepage',
-  props: {
-  },
-  data () {
-    return {
-    }
-  },
-  computed: {
-  }
+  name: 'Homepage'
 })
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-
   .homepage {
     width: 1200px;
     height: 1000px;
