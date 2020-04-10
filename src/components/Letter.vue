@@ -1,9 +1,9 @@
 <template>
-  <div :class="[show ? '': fade]">
+  <div :class="{ fade: !show }">
     <transition name="fade">
-      <h1 v-if="!isFound" :class="['', (isTargeted ? targeted : noTargeted)]" :style="{ left: xPosition, top: yPosition }">{{ letterName }}</h1>
+      <h1 v-if="!isFound" :class="{ targeted: isTargeted }" :style="{ left: xLetterPosition, top: yLetterPosition }">{{ name }}</h1>
     </transition>
-    <p id="letter" :class="[(isFound? boom: '')]" :style="{ left: xExplosionPosition, top: yExplosionPosition }" ></p>
+    <p id="letter" :class="{ boom: isFound}" :style="{ left: xExplosionPosition, top: yExplosionPosition }" ></p>
   </div>
 </template>
 
@@ -24,13 +24,7 @@ export default Vue.extend({
   },
   data () {
     return {
-      fade: 'fade',
-      targeted: 'targeted',
-      noTargeted: 'no-targeted',
-      boom: 'boom',
       show: true,
-      letterName: this.name,
-      widths: [500, 600, 700, 800, 900, 1000, 1100, 1200],
       x: _.sample([500, 600, 700, 800, 900, 1000, 1100, 1200]),
       y: -200,
       interval: null
@@ -49,10 +43,10 @@ export default Vue.extend({
     this.interval = setInterval(this.moveLetter, 5)
   },
   computed: {
-    xPosition () {
+    xLetterPosition () {
       return `${this.x}px`
     },
-    yPosition () {
+    yLetterPosition () {
       return `${this.y}px`
     },
     xExplosionPosition () {
@@ -69,17 +63,11 @@ export default Vue.extend({
     moveLetter () {
       this.y += 0.5
 
-      if (this.y > 680) {
-        this.show = false
-      }
+      if (this.y > 680) { this.show = false }
 
-      if (this.y > 820) {
-        this.$emit('letter-overtake-player')
-      }
+      if (this.y > 820) { this.$emit('letter-overtake-player') }
 
-      if (this.stopMovement) {
-        clearInterval(this.interval)
-      }
+      if (this.stopMovement) { clearInterval(this.interval) }
     }
   }
 })
@@ -87,11 +75,6 @@ export default Vue.extend({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-  .no-targeted {
-    position: fixed;
-    z-index: 1;
-  }
-
   .targeted {
     position: fixed;
     opacity: 0.5;
@@ -107,6 +90,8 @@ export default Vue.extend({
   }
 
   h1 {
+    position: fixed;
+    z-index: 1;
     font-size: 70px;
     color: FloralWhite;
     text-shadow: 2px 2px 4px #808080;
